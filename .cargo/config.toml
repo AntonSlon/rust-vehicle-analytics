@@ -1,0 +1,3 @@
+# Machine-specific paths are intentionally not configured here.
+# Configure GStreamer, FFmpeg, LLVM and ONNX Runtime through the host
+# environment before running Cargo.

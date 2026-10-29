@@ -1,0 +1,41 @@
+# Rust build artifacts
+/target/
+**/*.rs.bk
+*.pdb
+
+# IDE and editor settings
+/.idea/
+/.vscode/
+*.iml
+*.suo
+*.user
+
+# Local environment and native runtime files
+.env
+.env.*
+!.env.example
+*.dll
+*.lib
+*.exp
+
+# ONNX model weights
+*.onnx
+
+# Input fixtures and generated videos
+/src/data/
+/output*.mp4
+/camera-output*.mp4
+
+# Generated traffic reports; keep the directory in Git
+/src/report/*
+!/src/report/.gitkeep
+
+# Logs and temporary files
+*.log
+*.tmp
+*.temp
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
