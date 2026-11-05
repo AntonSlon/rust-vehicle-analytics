@@ -1,8 +1,5 @@
-use std::collections::HashMap;
-
 use image::{DynamicImage, ImageBuffer, ImageError, Rgb, Rgba};
 use ultralytics_inference::{Results, Source, SourceMeta};
-use edgefirst_tracker::Uuid;
 
 use crate::{constants::SMOOTH, detection::Detection};
 
@@ -22,7 +19,7 @@ pub fn raw_bytes2img(w: u32, h: u32, raw_img: &[u8]) -> Result<DynamicImage, Ima
 pub fn results2byte_track_boxes(results: &Vec<(SourceMeta, Results)>) -> Vec<Detection> {
     let mut byte_track_boxes: Vec<Detection> = Vec::new();
     let mut track_id = 0;
-    for (meta, result) in results {
+    for (_, result) in results {
         if let Some(boxes) = &result.boxes {
             let xyxy = boxes.xyxy();
             let confs = boxes.conf();
@@ -39,10 +36,6 @@ pub fn results2byte_track_boxes(results: &Vec<(SourceMeta, Results)>) -> Vec<Det
                 let class_id = class_id[i] as usize;
 
                 if is_vehicle(class_id) {
-                    // Считаем ширину и высоту
-                    let w = x2 - x1;
-                    let h = y2 - y1;
-
                     let byte_track_box = Detection {
                         bbox: [x1, y1, x2, y2],
                         confidence: score,
@@ -94,11 +87,6 @@ pub fn get_type_and_color(class_id: &usize) -> (String, Rgba<u8>){
         }
     };
     return (class_id_name, color)
-}
-
-pub fn transform_uiud(map: &HashMap<Uuid, u32>) -> HashMap<String, u32>{
-    map.into_iter()
-        .map(|(uuid, info)| (uuid.to_string(), *info)).collect()
 }
 
 pub fn update_fps(smoothed_fps: f32, current_fps: f32) -> f32{

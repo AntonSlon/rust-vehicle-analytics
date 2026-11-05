@@ -18,3 +18,4 @@ edgefirst-tracker = "0.32.1"
 json = "0.12.4"
 serde_json = "1.0.151"
 clap = "4.6.7"
+serde = { version = "1.0.229", features = ["derive"] }

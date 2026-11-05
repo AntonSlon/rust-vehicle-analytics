@@ -331,6 +331,7 @@ dependencies = [
  "nalgebra 0.32.6",
  "ort",
  "pathfinding",
+ "serde",
  "serde_json",
  "ultralytics-inference",
 ]

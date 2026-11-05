@@ -1,11 +1,10 @@
 use crate::detection::Detection;
     use crate::draw::{draw_deteciton, draw_fps, draw_vector};
-use crate::traffic_counter::TrafficCounter;
+use crate::traffic_counter::Report;
 use crate::util::{get_type_and_color, raw_bytes2img, raw_bytes2source, results2byte_track_boxes};
 use ab_glyph::FontArc;
 use edgefirst_tracker::{ByteTrack, ByteTrackBuilder, DetectionBox, Tracker, Uuid};
 use image::DynamicImage ;
-use serde_json::de;
 use std::collections::HashMap;
 use std::time::Instant;
 use ultralytics_inference::{Results, SourceMeta, YOLOModel};
@@ -23,7 +22,7 @@ pub struct YoloTracker {
     next_id: u32,
     font: FontArc,
     pub fps: f32,
-    pub traffic_counter: TrafficCounter,
+    pub traffic_report: Report,
     pub frame_cnt: u32
 }
 
@@ -42,7 +41,7 @@ impl YoloTracker {
             display_ids: HashMap::new(),
             next_id: 0,
             fps: 1.0,
-            traffic_counter: TrafficCounter::new(),
+            traffic_report: Report::new(),
             frame_cnt: 0,
             font: FontArc::try_from_slice(include_bytes!("DejaVuSans.ttf"))?
         })
@@ -91,7 +90,7 @@ impl YoloTracker {
 
                 let class_id = detection.class_id;
                 let score = detection.score();
-                let (class_id_name, color) = get_type_and_color(&class_id);
+                let (_, color) = get_type_and_color(&class_id);
 
                 let id = if let Some(id_cxcy) = self.display_ids.get(&uuid) {
                     let cx = x as f32 + w as f32 / 2.0;
@@ -109,9 +108,16 @@ impl YoloTracker {
                 };
 
                 self.display_ids.insert(uuid, (id, [cx as u32, cy as u32]));
+                //let time: Option<f32> = image_time;
 
-                self.traffic_counter.add_vehicle(id, uuid, &class_id_name);
-                
+                self.traffic_report.add_vehicle(
+                    id,
+                    uuid.to_string(),
+                    class_id as u32,
+                    image_time,
+                    score,
+                );
+
                 img = draw_deteciton(&[x, y, w, h], &id, img, &class_id, &self.font);
             }
         };

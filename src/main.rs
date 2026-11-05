@@ -103,16 +103,7 @@ fn main() {
 
                         model.fps = fps;
 
-                        //let instant_write_frame = time::Instant::now();
-
-                        //if args.live_stream {
                         writer.write_frame(&img).unwrap();
-                        //}
-
-                        // println!(
-                        //     "write frame {}",
-                        //     instant_write_frame.elapsed().as_secs_f32()
-                        // );
 
                         if state == gstreamer::State::Playing {
                              let slice = img.into_bytes();
@@ -135,12 +126,10 @@ fn main() {
     streamer.stop();
     writer.finish().unwrap();
     model
-        .traffic_counter
+        .traffic_report
+        .remove_bad_tracks();
+    model
+        .traffic_report
         .save_report()
         .expect("report error")
 }
-
-// pub fn processe_sample(
-//     sample: Sample,
-//     writer: Writer
-// )

@@ -7,7 +7,7 @@ pub struct Detection {
     pub class_id: usize,
     pub track_id: usize,
 }
-
+    
 impl DetectionBox for Detection {
     fn bbox(&self) -> [f32; 4] {
         self.bbox
