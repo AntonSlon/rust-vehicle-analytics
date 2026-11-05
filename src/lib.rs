@@ -2,7 +2,6 @@ pub mod bbox;
 pub mod constants;
 pub mod detection;
 pub mod draw;
-pub mod kalman;
 pub mod streamer;
 pub mod tracker;
 pub mod util;
